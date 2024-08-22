@@ -14,7 +14,7 @@ alias logstdin="node -r fs -e \"console.log((fs.readFileSync('/dev/stdin', 'utf-
 alias nodearch="node -p \"console.log(process.arch);\""
 alias getrepos="gh api \"users/MatteoGauthier/repos?sort=pushed\" --jq '.[].name' | logstdin"
 
-alias publicip="curl -s http://checkip.dyndns.org/ | sed -n 's/.*Current IP Address: \([0-9.]*\).*/\1/p'"
+alias publicip="curl -s http://checkip.dyndns.org/ | sed 's/[a-zA-Z<>/ :]//g'"
 alias localip="ipconfig getifaddr en0"
 
 alias e="eza -l --icons -s date"
