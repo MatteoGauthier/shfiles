@@ -31,3 +31,10 @@ readenv() {
 
   done < "$filePath"
 }
+
+qrcode () {
+  local input="$*"
+  [ -z "$input" ] && local input="@/dev/stdin"
+  curl -d "$input" https://qrcode.show
+}
+
