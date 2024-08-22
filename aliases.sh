@@ -18,6 +18,7 @@ alias publicip="curl -s http://checkip.dyndns.org/ | sed 's/[a-zA-Z<>/ :]//g'"
 alias localip="ipconfig getifaddr en0"
 
 alias e="eza -l --icons -s date"
+alias ez='eza -l --icons -s date'
 
 alias lg='lazygit'
 alias lzd='lazydocker'
