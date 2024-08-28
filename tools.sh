@@ -66,3 +66,7 @@ function frg {
         $EDITOR +"${linenumber}" "$file"
     fi
 }
+
+function lk {
+  cd "$(walk --icons "$@")"
+}
