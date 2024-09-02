@@ -1,5 +1,7 @@
 # shfiles
 
+[Documentation is available here](./DOCS.md).
+
 Simple shell scripts that are loaded on shell startup.
 
 ## Installation
