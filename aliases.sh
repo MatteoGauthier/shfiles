@@ -1,4 +1,3 @@
-
 alias y="yarn"
 alias modern_tsconfig="curl -s https://gist.githubusercontent.com/MatteoGauthier/3a5572e8685e9d7d3388c6ab4557474e/raw/7a16b2ed4f60b21ad91cd82b05ddecc907c31f0f/tsconfig.json > tsconfig.json"
 alias pnpx="pnpm dlx"
@@ -28,3 +27,7 @@ alias h='echo -e "$(history | sort -r | awk '\''{$1=""; print substr($0,2)}'\'' 
 alias xcd='cd "$(xplr --print-pwd-as-result)"'
 
 alias dive="docker run -ti --rm  -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive"
+
+alias fzfp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
+alias fp="fzfp"
+
