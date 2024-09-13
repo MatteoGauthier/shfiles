@@ -70,3 +70,23 @@ function frg {
 function lk {
   cd "$(walk --icons "$@")"
 }
+
+
+function zz() {
+  local dir=$(
+    zoxide query --list --score | sort -rn | while read -r line; do
+      score=$(echo "$line" | awk '{print $1}')                                     # Extract score
+      filepath=$(echo "$line" | awk '{$1=""; print $0}' | sed 's/^[[:space:]]*//') # Extract file path
+
+      if [ -e "$filepath" ]; then
+        mod_date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$filepath") # Get modified date (for macOS)
+
+        # Apply color formatting and display in correct order
+        echo -e "\033[1;32m$filepath\033[0m \033[1;34m$mod_date\033[0m \033[1;33m$score\033[0m"
+      fi
+    done |
+      fzf --layout reverse --ansi --info inline \
+        --nth 1 --query "$*" \
+        --bind 'enter:become:echo {1}'
+  ) && cd "$dir"
+}
