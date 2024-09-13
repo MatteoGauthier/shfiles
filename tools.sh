@@ -79,7 +79,12 @@ function zz() {
       filepath=$(echo "$line" | awk '{$1=""; print $0}' | sed 's/^[[:space:]]*//') # Extract file path
 
       if [ -e "$filepath" ]; then
-        mod_date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$filepath") # Get modified date (for macOS)
+        # Get modified date (works on both macOS and Linux), because on macOS the stat application is from the FreeBSD distribution, and on Ubuntu it's coreutils of GNU
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          mod_date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M:%S" "$filepath") # macOS
+        else
+          mod_date=$(stat -c "%y" "$filepath" | cut -d'.' -f1) # Linux
+        fi
 
         # Apply color formatting and display in correct order
         echo -e "\033[1;32m$filepath\033[0m \033[1;34m$mod_date\033[0m \033[1;33m$score\033[0m"
