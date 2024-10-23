@@ -33,3 +33,5 @@ alias dive="docker run -ti --rm  -v /var/run/docker.sock:/var/run/docker.sock wa
 alias fzfp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 alias fp="fzfp"
 
+alias legba="docker run -it --rm -v $(pwd):/data --network host evilsocket/legba"
+
