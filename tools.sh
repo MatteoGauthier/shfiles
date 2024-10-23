@@ -95,3 +95,74 @@ function zz() {
         --bind 'enter:become:echo {1}'
   ) && cd "$dir"
 }
+
+convert_to_mp4() {
+    # Check for flags
+    local download_flag=false
+    local input_file=""
+    
+    # Parse arguments
+    for arg in "$@"; do
+        if [[ "$arg" == "--dl" || "$arg" == "--download" ]]; then
+            download_flag=true
+        else
+            input_file="$arg"  # Capture the input file
+        fi
+    done
+
+    # Check if the input file exists
+    if [[ ! -f "$input_file" ]]; then
+        echo "Error: File '$input_file' does not exist."
+        return 1
+    fi
+
+    # Gather input file information using ffprobe
+    local input_file_size=$(stat -f%z "$input_file")  # Get input file size in bytes
+    local input_file_type=$(ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=noprint_wrappers=1:nokey=1 "$input_file")
+    
+    # Determine output directory
+    local output_dir
+    if $download_flag; then
+        output_dir="$HOME/Downloads"
+    else
+        output_dir="$(dirname "$input_file")"
+    fi
+
+    # Get the base name and output file name
+    local base_name="$(basename "$input_file" | sed 's/\.[^.]*$//')"  # Remove extension
+    local output_file="$output_dir/${base_name}.mp4"
+
+    # Check if the output file already exists and modify the filename if necessary
+    local counter=1
+    while [[ -f "$output_file" ]]; do
+        output_file="$output_dir/${base_name}_$counter.mp4"
+        ((counter++))
+    done
+
+    # Convert the video to MP4 using ffmpeg
+    ffmpeg -i "$input_file" -c:v libx264 -c:a aac -strict experimental -b:a 192k "$output_file"
+
+    # Check if ffmpeg succeeded
+    if [[ $? -eq 0 ]]; then
+        # Get output file size
+        local output_file_size=$(stat -f%z "$output_file")
+
+        # Calculate size reduction
+        local size_reduction=$((input_file_size - output_file_size))
+        local size_reduction_percentage=0
+        if [[ $input_file_size -gt 0 ]]; then
+            size_reduction_percentage=$(awk "BEGIN {printf \"%.2f\", ($size_reduction/$input_file_size)*100}")
+        fi
+
+        # Output information
+        echo "Successfully converted '$input_file' to '$output_file'."
+        echo "Input File Type: $input_file_type"
+        echo "Input File Size: $((input_file_size / 1024)) KB"
+        echo "Output File Size: $((output_file_size / 1024)) KB"
+        echo "Size Reduction: $size_reduction bytes ($size_reduction_percentage%)"
+    else
+        echo "Error: Conversion failed."
+        return 1
+    fi
+}
+
