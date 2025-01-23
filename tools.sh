@@ -170,4 +170,9 @@ function jsont(){
   jq -r '(.[0] | ([keys[] | .] |(., map(length*"-")))), (.[] | ([keys[] as $k | .[$k]])) | @tsv' | column -t -s $'\t'
 }
 
+# fzf cd
+function fcd() {
+  FZF_DEFAULT_COMMAND="fd --type d"
+
+  cd "$(fzf "$@")"
 }
