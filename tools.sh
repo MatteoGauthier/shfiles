@@ -1,4 +1,3 @@
-
 readenv() {
   local filePath="${1:-.env}"
 
@@ -214,8 +213,19 @@ function rgi() {
 function rgia() {
     _rgi_base "$1" "-uuu"
 }
-function dlogs() {
-  docker ps --format='{{.ID}} {{.Names}}' | fzf --preview 'echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f -n 300 %' --bind 'enter:execute(echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f %)'
 
-  # docker ps --format='{{.ID}} {{.Names}}' | fzf --preview "echo {} | awk '{print \$1}' | xargs -I % docker logs -f -n 300 %" --bind 'enter:execute(echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f %)'
+dlogs() {
+  local layout=${1:-default}
+  local preview_cmd='docker logs --timestamps -n 300 $(echo {} | cut -d" " -f1) 2>&1 | bat --style=plain --color=always -l log'
+  local preview_opts="--preview-window=right:60%:wrap"
+
+  docker ps --format='table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}' | \
+    tail -n +2 | \
+    fzf --header="Press CTRL-P to switch layout, ENTER to follow logs" \
+        --preview "$preview_cmd" \
+        $preview_opts \
+        --bind 'ctrl-l:toggle-preview-wrap' \
+        --bind 'ctrl-p:change-preview-window(right,60%|down,80%)' \
+        --bind 'enter:execute(docker logs -f --timestamps $(echo {} | cut -d" " -f1))' \
+        --color 'preview-border:bright-black'
 }
