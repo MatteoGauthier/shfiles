@@ -214,3 +214,8 @@ function rgi() {
 function rgia() {
     _rgi_base "$1" "-uuu"
 }
+function dlogs() {
+  docker ps --format='{{.ID}} {{.Names}}' | fzf --preview 'echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f -n 300 %' --bind 'enter:execute(echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f %)'
+
+  # docker ps --format='{{.ID}} {{.Names}}' | fzf --preview "echo {} | awk '{print \$1}' | xargs -I % docker logs -f -n 300 %" --bind 'enter:execute(echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f %)'
+}

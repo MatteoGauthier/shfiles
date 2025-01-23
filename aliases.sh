@@ -35,4 +35,3 @@ alias fp="fzfp"
 
 alias legba="docker run -it --rm -v $(pwd):/data --network host evilsocket/legba"
 
-alias dlogs="docker ps --format='{{.ID}} {{.Names}}' | fzf --preview 'echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f -n 300 %' --bind 'enter:execute(echo {} | awk '\''{print $1}'\'' | xargs -I % docker logs -f %)'"
