@@ -8,3 +8,5 @@ export FZF_DEFAULT_OPTS='--multi --no-height --extended'
 export HISTSIZE=50000
 export SAVEHIST=50000
 export HISTTIMEFORMAT="%d/%m/%y %T "
+export PAGER='less -S'
+
