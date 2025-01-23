@@ -166,3 +166,8 @@ convert_to_mp4() {
     fi
 }
 
+function jsont(){
+  jq -r '(.[0] | ([keys[] | .] |(., map(length*"-")))), (.[] | ([keys[] as $k | .[$k]])) | @tsv' | column -t -s $'\t'
+}
+
+}
