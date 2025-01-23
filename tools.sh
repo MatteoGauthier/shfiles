@@ -176,3 +176,41 @@ function fcd() {
 
   cd "$(fzf "$@")"
 }
+
+function _rgi_base() {
+    # Initial search pattern is passed as argument
+    local pattern="${1:-}"
+    local rg_args="${2:-}"
+    
+    echo $pattern
+    
+    # Use ripgrep to search and pipe into fzf
+    local selected=$(
+        rg $rg_args --color=always --line-number --no-heading --smart-case "${pattern}" |
+            fzf --ansi \
+                --color 'hl:-1:underline,hl+:-1:underline:reverse' \
+                --delimiter ':' \
+                --preview 'bat --color=always --style=numbers --highlight-line {2} {1}' \
+                --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
+                --bind 'ctrl-p:change-preview-window(hidden|)' \
+                --header 'CTRL-P to toggle preview window' \
+                --exact
+    )
+
+    # If selection was made, open in editor
+    if [[ -n "$selected" ]]; then
+        local file=$(echo "$selected" | cut -d':' -f1)
+        local line=$(echo "$selected" | cut -d':' -f2)
+        
+        # Open in default editor or fallback to vim
+        ${EDITOR:-vim} +"${line}" "$file"
+    fi
+}
+
+function rgi() {
+    _rgi_base "$1" ""
+}
+
+function rgia() {
+    _rgi_base "$1" "-uuu"
+}
