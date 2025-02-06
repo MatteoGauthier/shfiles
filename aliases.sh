@@ -28,8 +28,6 @@ alias npx="bunx"
 alias h='echo -e "$(history | sort -r | awk '\''{$1=""; print substr($0,2)}'\'' | fzf +s --exact --bind '\''ctrl-y:execute-silent(echo -n {+} | pbcopy)'\'','\''ctrl-e:execute(command {+})+abort'\'' )"'
 alias xcd='cd "$(xplr --print-pwd-as-result)"'
 
-alias dive="docker run -ti --rm  -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive"
-
 alias fzfp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 alias fp="fzfp"
 
