@@ -192,7 +192,8 @@ function _rgi_base() {
                 --preview 'bat --color=always --style=numbers --highlight-line {2} {1}' \
                 --preview-window 'up,60%,border-bottom,+{2}+3/3,~3' \
                 --bind 'ctrl-p:change-preview-window(hidden|)' \
-                --header 'CTRL-P to toggle preview window' \
+                --bind 'ctrl-i:execute(bat --color=always --style=numbers --highlight-line {2} {1})' \
+                --header 'CTRL-P to toggle preview window, CTRL-I to open in editor' \
                 --exact
     )
 
@@ -201,8 +202,14 @@ function _rgi_base() {
         local file=$(echo "$selected" | cut -d':' -f1)
         local line=$(echo "$selected" | cut -d':' -f2)
         
-        # Open in default editor or fallback to vim
-        ${EDITOR:-vim} +"${line}" "$file"
+        # Handle different editors
+        if [[ "$EDITOR" == *"code"* ]] || [[ "$EDITOR" == *"cursor"* ]]; then
+            # VS Code/Cursor specific handling
+            "$EDITOR" --goto "$file:$line"
+        else
+            # Default editor handling
+            ${EDITOR:-vim} +"${line}" "$file"
+        fi
     fi
 }
 
