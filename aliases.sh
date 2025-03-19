@@ -33,3 +33,4 @@ alias fp="fzfp"
 
 alias legba="docker run -it --rm -v $(pwd):/data --network host evilsocket/legba"
 
+alias hyfetch='bash <(curl -sL nf.hydev.org)'
